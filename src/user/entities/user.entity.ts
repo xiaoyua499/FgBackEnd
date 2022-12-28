@@ -1,43 +1,48 @@
-import { BeforeInsert, BeforeRecover, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-const bcrypt = require('bcryptjs')
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
+  // 主键id
   @PrimaryGeneratedColumn('uuid')
-  id: number
+  id: number;
 
-  @Column({ length: 100 })
-  username: string //用户名
+  // 创建时间
+  @CreateDateColumn()
+  createTime: Date
 
-  @Column({ select: false })
-  password: string //密码
-
-  @Column()
-  phone: number //手机号码
-
-  @Column()
-  email: string //邮箱
-
-  @Column()
-  avatar: string //头像
-
-  @Column({
-    name: 'create_time',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createTime: Date //创建时间
-
-  @Column({
-    name: 'update_time',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  // 更新时间
+  @UpdateDateColumn()
   updateTime: Date
 
-  @BeforeInsert()
-  async encrptPwd() {
-    this.password = await bcrypt.hashSync(this.password)
-  }
+  // 软删除
+  @Column({
+    default: false
+  })
+  isDelete: boolean
+
+  // 昵称
+  @Column('text')
+  nickname: string;
+
+  // 手机号
+  @Column('text')
+  mobile: string;
+
+  // 邮箱
+  @Column('text')
+  email: string;
+
+  // 加密后的密码
+  @Column('text', { select: false })
+  password: string;
+
+  // 加密盐
+  @Column('text', { select: false })
+  salt: string;
 }

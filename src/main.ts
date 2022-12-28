@@ -1,27 +1,17 @@
-import { VersioningType } from '@nestjs/common/enums';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { initDoc } from "./doc";
 import { AllExceptionsFilter } from './common/exceptions/base.exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { Logger } from '@nestjs/common';
-
-const logger = new Logger()
+import { initDoc } from './doc';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  //初始化doc
+  //初始化DOC
   initDoc(app)
-  // //版本控制
-  // app.enableVersioning({
-  //   defaultVersion:"1",
-  //   type:VersioningType.URI
-  // })
-// //全局前缀
-// app.setGlobalPrefix('/api')
-//全局过滤器
-app.useGlobalFilters(new AllExceptionsFilter())
-app.useGlobalInterceptors(new TransformInterceptor())
+  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalInterceptors(new TransformInterceptor())
+  app.useGlobalFilters(new AllExceptionsFilter())
   await app.listen(3000);
 }
 bootstrap();

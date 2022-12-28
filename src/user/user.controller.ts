@@ -1,37 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LoginDTO } from '../auth/dto/login.dto';
+import { RegisterDTO } from './dto/register.dto';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
 
+import { UserInfoResponse } from '../auth/vo/user-info.vo';
+@ApiTags("用户注册")
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
-  @ApiOperation({ summary: '注册用户' })
-  @ApiResponse({ status: 201, type: [User] })
-  @Post('addUser')
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  constructor(
+    private userService: UserService
+  ) { }
+  @ApiOperation({ summary: '注册' })
+  @ApiBody({ type: RegisterDTO })
+  @ApiOkResponse({ description: '注册', type: UserInfoResponse })
+  @Post('register')
+  async register(
+    @Body() registerDTO: RegisterDTO
+  ): Promise<UserInfoResponse> {
+    return this.userService.register(registerDTO)
   }
 }

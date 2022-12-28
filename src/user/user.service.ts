@@ -1,45 +1,68 @@
-import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { encryptPassword, makeSalt } from 'src/utils/cryptogram.util';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginDTO } from '../auth/dto/login.dto';
+import { RegisterDTO } from './dto/register.dto';
 import { User } from './entities/user.entity';
+import { TokenVO } from '../auth/vo/token.vo';
 
 
 @Injectable()
 export class UserService {
+
   constructor(
-    @InjectRepository(User) private user: Repository<User>
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) { }
-  async create(createUserDto: CreateUserDto) {
-    const { username } = createUserDto;
 
-    const existUser = await this.user.findOne({
-      where: { username },
-    });
-    if (existUser) {
-      throw new HttpException("用户名已存在", HttpStatus.BAD_REQUEST)
+  // 校验注册信息
+  async checkRegisterForm(
+    registerDTO: RegisterDTO,
+  ): Promise<any> {
+    if (registerDTO.password !== registerDTO.passwordRepeat) {
+      throw new NotFoundException('两次输入的密码不一致，请检查')
     }
-
-    const newUser = await this.user.create(createUserDto)
-
-    await this.user.save(newUser);
-    return await this.user.findOne({ where: { username } })
+    const { mobile, email } = registerDTO
+    const hasUser = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.mobile = :mobile', { mobile })
+      .where('user.email = :email', { email })
+      .getOne()
+    if (hasUser) {
+      throw new NotFoundException('用户已存在')
+    }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  // 注册
+  async register(
+    registerDTO: RegisterDTO
+  ): Promise<any> {
+
+    await this.checkRegisterForm(registerDTO)
+
+    const { nickname, password, mobile, email } = registerDTO;
+    const salt = makeSalt(); // 制作密码盐
+    const hashPassword = encryptPassword(password, salt);  // 加密密码
+
+    const newUser: User = new User()
+    newUser.nickname = nickname
+    newUser.mobile = mobile
+    newUser.email = email
+    newUser.password = hashPassword
+    newUser.salt = salt
+    const result = await this.userRepository.save(newUser)
+    delete result.password
+    delete result.salt
+    return {
+      info: result
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findOne(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id }
+    });
+    return user;
   }
 }
