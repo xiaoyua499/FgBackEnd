@@ -65,4 +65,8 @@ export class UserService {
     });
     return user;
   }
+
+  allowLogin(){
+    return '允许登录'
+  }
 }

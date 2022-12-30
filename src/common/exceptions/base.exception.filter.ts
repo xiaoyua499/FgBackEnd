@@ -17,7 +17,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const status = exception.getStatus()
 
     response.status(status).send({
-      statusCode: status,
+      status: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       message: exception.message,
