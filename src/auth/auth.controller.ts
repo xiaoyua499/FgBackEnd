@@ -29,6 +29,7 @@ export class AuthController {
   async findOne(@Req() req) {
     return this.userService.findOne(req.user.id)
   }
+  
   @ApiOperation({ summary: '获取登录权限' })
   @ApiBearerAuth() // swagger文档设置token
   @UseGuards(AuthGuard('jwt'))

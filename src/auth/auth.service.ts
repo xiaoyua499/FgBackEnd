@@ -37,7 +37,6 @@ export class AuthService {
     if (currentHashPassword !== dbPassword) {
       throw new NotFoundException('密码错误')
     }
-
     return user
   }
 
