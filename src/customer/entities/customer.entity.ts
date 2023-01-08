@@ -23,11 +23,21 @@ export class Customer {
   headImg: string
 
   //创建时间
-  @CreateDateColumn()
+  @CreateDateColumn(
+    {
+      type: 'timestamp',
+      name: 'createTime',
+      comment: '创建时间',
+    }
+  )
   createTime: Date
 
   //最近会话时间
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    name: 'updateTime',
+    comment: '最后更新时间',
+  })
   updateTime: Date
 
   //接待状态

@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class CustomerDTO {
   @ApiProperty({
     description: '顾客id',
-    example: '8b0a7966-cdd6-4e75-9244-79deea9a33b3'
+    example: '2433752c-8bce-41c6-aa61-6c94f9b2dfd4'
   })
   @IsNotEmpty({ message: '请输入顾客id' })
   readonly customerId: string
@@ -17,7 +17,7 @@ export class CustomerDTO {
 
   @ApiProperty({
     description: '是否下单',
-    example: false
+    example: true
   })
   readonly isShopping: boolean
 
@@ -29,13 +29,13 @@ export class CustomerDTO {
 
   @ApiProperty({
     description: '是否标星',
-    example: false
+    example: true
   })
   readonly isStar: boolean
 
   @ApiProperty({
     description: '标星颜色',
-    example: 1
+    example: '#669eff'
   })
   readonly starColor: string
 
