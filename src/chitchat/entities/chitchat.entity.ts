@@ -1,36 +1,40 @@
-import { Column, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
+@Entity()
 export class Chitchat {
   //id
   @PrimaryGeneratedColumn('uuid')
-  id: number
+  chitchatid: string
 
-  //用户id
-  @Column('text')
-  userId: string
+  //发送者id
+  @Column({
+    default: 'ce3835ec-626d-48ef-90c6-2b8771c4878d'
+  })
+  sendId: string
 
-  //顾客id
-  @Column('text')
-  customerId: string
-  
   //发送内容
-  @Column('text')
-  content:string
+  @Column({
+    default: '多长时间发货'
+  })
+  message: string
 
   //内容属性
   @Column({
-    type:'number',
-    default:0
+    default: 0
   })
-  contentAttribute:number
+  contentAttribute: number
 
   //发送时间
-  @UpdateDateColumn()
-  sendTime:Date
+  @CreateDateColumn({
+    type: 'timestamp',
+    name: 'sendTime',
+    comment: '发送时间',
+  })
+  sendTime: Date
 
   //消息状态
   @Column({
-    default:false
+    default: false
   })
-  MessageStatus:boolean
+  MessageStatus: boolean
 }
