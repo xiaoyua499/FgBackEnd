@@ -1,32 +1,35 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty } from "class-validator";
 
-export class CreateChitchatDto {
+export class ChitchatDto {
   @ApiProperty({
-    description: '用户id'
+    description: '发送者id',
+    example:'ce3835ec-626d-48ef-90c6-2b8771c4878d'
   })
-  readonly userId: string
-
-  @ApiProperty({
-    description: '顾客id'
-  })
-  readonly customerId: string
+  @IsNotEmpty({ message: '请输入发送者id' })
+  readonly sendId: string
 
   @ApiProperty({
     description: '发送内容',
-    default: '多长时间发货'
+    example: '多长时间发货'
   })
-  readonly content: string
+  @IsNotEmpty({ message: '请输入发送内容' })
+
+  readonly message: string
 
   @ApiProperty({
     description: '内容属性',
-    default: 0
+    example: 0
   })
+  @IsNotEmpty({ message: '请输入内容属性' })
+
   readonly contentAttribute: number
 
   @ApiProperty({
     description: '消息状态',
-    default: false
+    example: false
   })
+  @IsNotEmpty({ message: '请输入消息状态' })
   readonly MessageStatus: boolean
 
 }

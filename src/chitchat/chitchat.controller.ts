@@ -1,24 +1,19 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ChitchatService } from './chitchat.service';
-import { CreateChitchatDto } from './dto/chitchat.dto';
+import { ChitchatDto } from './dto/chitchat.dto';
+import { ChaichatInfoResponse } from './vo/chitchat-info.vo';
 
+@ApiTags("消息")
 @Controller('chitchat')
 export class ChitchatController {
-  constructor(private readonly chitchatService: ChitchatService) {}
+  constructor(private chitchatService: ChitchatService) {}
 
-  @Post()
-  create(@Body() createChitchatDto: CreateChitchatDto) {
-    return this.chitchatService.create(createChitchatDto);
+  @ApiOperation({ summary: '创建信息' })
+  @ApiBody({ type: ChitchatDto })
+  @ApiOkResponse({ description: '创建信息', type: ChaichatInfoResponse })
+  @Post('create')
+  async createChitchai(@Body() chitchatDto: ChitchatDto) {
+    return this.chitchatService.createChitchai(chitchatDto);
   }
-
-  @Get()
-  findAll() {
-    return this.chitchatService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chitchatService.findOne(+id);
-  }
-
 }
