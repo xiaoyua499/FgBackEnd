@@ -38,16 +38,16 @@ export class CustomerService {
   }
 
   //查找顾客
-  async findAll(userId: string): Promise<any> {
+  async findAll(query: { userId: string }): Promise<any> {
     const customer = await this.customerRepository.find({
-      where: { userId }
+      where: { userId: query.userId }
     })
     // console.log(customer);
     return customer
   }
 
   //更新顾客信息
-  async updataCustomer(customerId:string,customerDTO: CustomerDTO) {
+  async updataCustomer(customerId: string, customerDTO: CustomerDTO) {
     await this.customerRepository.update(customerId, customerDTO)
     // console.log('customer', customerDTO);
     return customerDTO

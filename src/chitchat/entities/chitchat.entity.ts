@@ -3,14 +3,26 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 @Entity()
 export class Chitchat {
   //id
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   chitchatid: string
 
   //发送者id
-  @Column({
-    default: 'ce3835ec-626d-48ef-90c6-2b8771c4878d'
-  })
+  @Column()
   sendId: string
+
+  //接受着id  
+  @Column()
+  acceptId: string
+
+  //顾客id
+  @Column()
+  customerId:string
+
+  //用户id
+  @Column({
+    default:'ce3835ec-626d-48ef-90c6-2b8771c4878d'
+  })
+  userId: string
 
   //发送内容
   @Column({

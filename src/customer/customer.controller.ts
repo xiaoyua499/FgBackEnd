@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
-import { Res } from '@nestjs/common/decorators';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { query } from 'express';
 import { CustomerService } from './customer.service';
 import { CustomerDTO } from './dto/customer.dto'
 import { CustomerRegisterDTO } from './dto/customerRegister.dto'
@@ -25,8 +25,10 @@ export class CustomerController {
   @ApiBearerAuth() // swagger文档设置token
   @UseGuards(AuthGuard('jwt'))
   @Get('customerInfo')
-  async findAll(@Req() req) {
-    return this.customerService.findAll(req.userId)
+  async findAll(@Query() query: {userId:string}) {
+    // console.log(query);
+    
+    return this.customerService.findAll(query)
   }
 
   @ApiOperation({ summary: '更新顾客信息' })
