@@ -4,10 +4,29 @@ import { IsNotEmpty } from "class-validator";
 export class ChitchatDto {
   @ApiProperty({
     description: '发送者id',
-    example:'ce3835ec-626d-48ef-90c6-2b8771c4878d'
+    example: 'ce3835ec-626d-48ef-90c6-2b8771c4878d'
   })
   @IsNotEmpty({ message: '请输入发送者id' })
   readonly sendId: string
+
+  @ApiProperty({
+    description: '接受着id',
+    example: '2433752c-8bce-41c6-aa61-6c94f9b2dfd4'
+  })
+  @IsNotEmpty({ message: '请输入发送者id' })
+  readonly acceptId: string
+  @ApiProperty({
+    description: '顾客id',
+    example: '2433752c-8bce-41c6-aa61-6c94f9b2dfd4'
+  })
+  @IsNotEmpty({ message: '请输入发送者id' })
+  readonly customerId: string
+  @ApiProperty({
+    description: '用户id',
+    example: 'ce3835ec-626d-48ef-90c6-2b8771c4878d'
+  })
+  @IsNotEmpty({ message: '请输入发送者id' })
+  readonly userId: string
 
   @ApiProperty({
     description: '发送内容',
